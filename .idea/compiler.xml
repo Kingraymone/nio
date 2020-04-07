@@ -9,8 +9,5 @@
         <module name="nio" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="nio" target="1.5" />
-    </bytecodeTargetLevel>
   </component>
 </project>
