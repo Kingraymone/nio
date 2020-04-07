@@ -26,12 +26,11 @@ public class Request {
             ByteBuffer bb = ByteBuffer.allocate(2048);
             bis = new ByteArrayOutputStream(2048);
             int len;
-            while ((len = input.read(bb)) != -1) {
+            while ((len = input.read(bb)) > 0) {
                 bb.flip();//读写模式转换
                 bis.write(bb.array(), 0, bb.limit());
             }
-            parseUri(bis.toString(Constant.DEFAULTCHARSET));
-            //input.shutdownInput();
+            uri=parseUri(bis.toString(Constant.DEFAULTCHARSET));
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -48,7 +47,7 @@ public class Request {
     public String parseUri(String requestLine) {
         int index1, index2;
         if ((index1 = requestLine.indexOf(Constant.BLANKSPACE)) != -1) {
-            if ((index2 = requestLine.indexOf(Constant.BLANKSPACE, index1)) != -1) {
+            if ((index2 = requestLine.indexOf(Constant.BLANKSPACE, index1 + 1)) != -1) {
                 return requestLine.substring(index1 + 1, index2);
             }
         }
