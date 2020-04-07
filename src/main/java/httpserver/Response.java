@@ -39,7 +39,6 @@ public class Response {
                 fileChannel.transferTo(0, fileChannel.size(), output);
             } else {
                 FileChannel fileChannel = FileChannel.open(Paths.get(HttpServer.WEB_ROOT + "/src/main/resources/404.html"));
-
                 fileChannel.transferTo(0, fileChannel.size(), output);
             }
         } catch (IOException e) {

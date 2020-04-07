@@ -73,6 +73,7 @@ public class HttpServer {
                                 response.responseResult();
                             }
                         });
+                        selectionKey.interestOps(SelectionKey.OP_READ);
                     }
                 }
             }
