@@ -33,7 +33,7 @@ public class HttpConnector implements Runnable{
             ServerSocketChannel ssc = ServerSocketChannel.open();
             //设置通道为非阻塞模式
             ssc.configureBlocking(false);
-            ssc.bind(new InetSocketAddress(8090));
+            ssc.bind(new InetSocketAddress(80));
             //注册感兴趣的事件
             ssc.register(selector, SelectionKey.OP_ACCEPT);
             while (true) {
@@ -54,8 +54,7 @@ public class HttpConnector implements Runnable{
                         SocketChannel accept = ssc.accept();
                         System.out.println("新连接到来：" + accept.getLocalAddress());
                         // 将新连接交付为HTTPProcessor处理
-                        HttpPorcessor hp = new HttpPorcessor();
-                        hp.process(accept);
+                        HttpPorcessor.process(accept);
                     }
                 }
             }

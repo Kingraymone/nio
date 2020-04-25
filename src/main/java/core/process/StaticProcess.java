@@ -11,6 +11,6 @@ import connector.httpserver.Response;
  */
 public class StaticProcess {
     public void process(Request request, Response response){
-
+        response.responseStatic();
     }
 }

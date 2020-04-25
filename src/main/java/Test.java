@@ -1,8 +1,9 @@
+import connector.utils.Constant;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 
 public class Test {
     public static void swap(int[] nums, int i, int j) {
@@ -156,7 +157,17 @@ public class Test {
         }
         return result;
     }
+    static class A implements MapTest.EntryTest {
 
+
+        @Override
+        public void entry() {
+
+        }
+    }
     public static void main(String[] args) throws IllegalAccessException, InstantiationException {
+        Properties properties = System.getProperties();
+        properties.list(System.out);
+
     }
 }

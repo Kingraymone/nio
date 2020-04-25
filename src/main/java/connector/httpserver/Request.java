@@ -1,5 +1,6 @@
 package connector.httpserver;
 
+import com.sun.xml.internal.ws.api.message.ExceptionHasMessage;
 import lombok.Getter;
 import connector.utils.Constant;
 
@@ -7,16 +8,45 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
 
 @Getter
 public class Request {
     private SocketChannel input;
     private String uri;
-
+    private String protocol;
+    private String method;
+    private HashMap<String,String> head = new HashMap<>(8);
+    private static final int BUFFER_SIZE = 8196;
     public Request(SocketChannel sc) {
         this.input = sc;
     }
 
+    public String praseRequest(){
+        ByteBuffer bb = ByteBuffer.allocate(BUFFER_SIZE);
+        try {
+            int num=input.read(bb);
+            if(num>0){
+                return new String(bb.array(),0,bb.limit());
+            }
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public void parseHead(String param) throws Exception {
+        String separator = System.getProperty("line.separator");
+        String line = separator.substring(0,param.indexOf(separator));
+        String[] heads = line.split(" ");
+        if(heads.length!=3){
+            throw new Exception("解析头部失败！");
+        }else{
+            this.method=heads[0];
+            this.uri=heads[1];
+            this.protocol=heads[2];
+        }
+    }
     public void parse() {
         if (input == null) {
             return;
