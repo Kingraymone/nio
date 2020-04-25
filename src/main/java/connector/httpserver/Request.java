@@ -1,8 +1,7 @@
 package connector.httpserver;
 
-import com.sun.xml.internal.ws.api.message.ExceptionHasMessage;
-import lombok.Getter;
 import connector.utils.Constant;
+import lombok.Getter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
