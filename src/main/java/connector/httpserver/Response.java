@@ -78,7 +78,7 @@ public class Response {
             if(file.exists()){
                 FileChannel fc=FileChannel.open(file.toPath(), StandardOpenOption.READ);
                 sb.append("Content-length:").append(fc.size());
-                sb.append(Constant.LINESEPARATOR);
+                sb.append(Constant.LINESEPARATOR).append(Constant.LINESEPARATOR);
                 ByteBuffer bb = ByteBuffer.allocate((int)(sb.length()+fc.size()+64));
                 bb.put(sb.toString().getBytes());
                 fc.read(bb);
@@ -87,7 +87,7 @@ public class Response {
             }else{
                 FileChannel fc = FileChannel.open(new File(relative+Constant.FILESEPARATOR+"404.html").toPath(),StandardOpenOption.READ);
                 sb.append("Content-length:").append(fc.size());
-                sb.append(Constant.LINESEPARATOR);
+                sb.append(Constant.LINESEPARATOR).append(Constant.LINESEPARATOR);
                 ByteBuffer bb = ByteBuffer.allocate((int)(sb.length()+fc.size()+64));
                 bb.put(sb.toString().getBytes());
                 fc.read(bb);
@@ -96,6 +96,12 @@ public class Response {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                output.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     public void responseServlet(){

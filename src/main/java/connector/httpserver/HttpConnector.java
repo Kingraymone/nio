@@ -33,7 +33,7 @@ public class HttpConnector implements Runnable{
             ServerSocketChannel ssc = ServerSocketChannel.open();
             //设置通道为非阻塞模式
             ssc.configureBlocking(false);
-            ssc.bind(new InetSocketAddress(80));
+            ssc.bind(new InetSocketAddress(8090));
             //注册感兴趣的事件
             ssc.register(selector, SelectionKey.OP_ACCEPT);
             while (true) {

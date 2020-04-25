@@ -37,7 +37,7 @@ public class Request {
     }
     public void parseHead(String param) throws Exception {
         String separator = System.getProperty("line.separator");
-        String line = separator.substring(0,param.indexOf(separator));
+        String line = param.substring(0,param.indexOf(separator));
         String[] heads = line.split(" ");
         if(heads.length!=3){
             throw new Exception("解析头部失败！");

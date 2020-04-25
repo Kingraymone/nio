@@ -22,7 +22,12 @@ public class RequestProcess implements Runnable {
         try {
             request = new Request(sc);
             response = new Response(sc, request);
-            request.parseHead(request.praseRequest());
+            String param = request.praseRequest();
+            if (param != null) {
+                request.parseHead(param);
+            }else{
+                return;
+            }
             if (request.getUri().startsWith("/servlet")) {
                 System.out.println("处理动态请求！");
 
@@ -34,12 +39,6 @@ public class RequestProcess implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
 
-        } finally {
-            try {
-                sc.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 }
