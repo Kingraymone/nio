@@ -60,12 +60,11 @@ public class Response {
                 FileChannel fc = FileChannel.open(new File(relative + Constant.FILESEPARATOR + "404.html").toPath(), StandardOpenOption.READ);
                 sb.append("Content-length:").append(fc.size());
                 sb.append(Constant.LINESEPARATOR).append(Constant.LINESEPARATOR);
-                ByteBuffer bb = ByteBuffer.wrap(sb.toString().getBytes());
-                do{
-                    bb.flip();
-                    output.write(bb);
-                    bb.clear();
-                }while(fc.read(bb)!=-1);
+                ByteBuffer bb = ByteBuffer.allocate((int) (sb.length() + fc.size() + 64));
+                bb.put(sb.toString().getBytes());
+                fc.read(bb);
+                bb.flip();
+                output.write(bb);
             }
         } catch (IOException e) {
             e.printStackTrace();

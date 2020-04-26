@@ -61,13 +61,7 @@ public class HttpPorcessor {
                                     //可读
                                     if(key.isValid()&&key.isReadable()){
                                         System.out.println("开始处理请求！"+(((SocketChannel)key.channel()).getRemoteAddress()));
-                                        key.channel();
                                         tpe.execute(new RequestProcess(key));
-                                    }else if(key.isValid()&&key.isWritable()){
-                                        //可写入
-                                        System.out.println("开始处理响应！"+(((SocketChannel)key.channel()).getRemoteAddress()));
-                                        key.channel();
-                                        tpe.execute(new ResponseProcess(key));
                                     }
                                 }
                             } catch (IOException e) {

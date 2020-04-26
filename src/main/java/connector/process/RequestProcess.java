@@ -25,11 +25,21 @@ public class RequestProcess implements Runnable {
             if (param != null) {
                 request.parseHead(param);
             }else{
+                sk.cancel();
                 return;
             }
-            sk.attach(request);
-            //请求处理完成修改感兴趣事件为读
-            sk.interestOps(SelectionKey.OP_WRITE);
+            Response response = new Response((SocketChannel) sk.channel(), request);
+            if (request.getUri().startsWith("/servlet")) {
+                System.out.println("处理动态请求！");
+
+            } else {
+                System.out.println("处理静态请求！");
+                StaticProcess staticProcess = new StaticProcess();
+                staticProcess.process(request, response);
+            }
+            sk.cancel();
+            //响应结束修改为可读事件
+            //sk.interestOps(SelectionKey.OP_READ);
         } catch (Exception e) {
             e.printStackTrace();
         }
