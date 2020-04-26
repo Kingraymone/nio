@@ -1,7 +1,7 @@
 package connector.httpserver;
 
 import connector.utils.Constant;
-import lombok.Getter;
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 
-@Getter
+
 public class Request {
     private SocketChannel input;
     private String uri;
@@ -83,8 +83,19 @@ public class Request {
         return null;
     }
 
-    @Override
-    public String toString() {
-        return getUri();
+    public String getUri() {
+        return uri;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public HashMap<String, String> getHead() {
+        return head;
     }
 }

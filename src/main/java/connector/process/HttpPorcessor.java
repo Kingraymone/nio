@@ -55,11 +55,19 @@ public class HttpPorcessor {
                                 Set<SelectionKey> selectionKeys = selector.selectedKeys();
                                 Iterator<SelectionKey> iterator = selectionKeys.iterator();
                                 while(iterator.hasNext()){
+                                    //由于水平触发则会处于一直可读
                                     SelectionKey key = iterator.next();
                                     iterator.remove();
                                     //可读
-                                    if(key.isReadable()){
-                                        tpe.execute(new RequestProcess(key.channel()));
+                                    if(key.isValid()&&key.isReadable()){
+                                        System.out.println("开始处理请求！"+(((SocketChannel)key.channel()).getRemoteAddress()));
+                                        key.channel();
+                                        tpe.execute(new RequestProcess(key));
+                                    }else if(key.isValid()&&key.isWritable()){
+                                        //可写入
+                                        System.out.println("开始处理响应！"+(((SocketChannel)key.channel()).getRemoteAddress()));
+                                        key.channel();
+                                        tpe.execute(new ResponseProcess(key));
                                     }
                                 }
                             } catch (IOException e) {

@@ -52,7 +52,7 @@ public class HttpConnector implements Runnable{
                     if (selectionKey.isAcceptable()) {
                         // 有新连接就绪
                         SocketChannel accept = ssc.accept();
-                        System.out.println("新连接到来：" + accept.getLocalAddress());
+                        System.out.println("新连接到来：" + accept.getRemoteAddress());
                         // 将新连接交付为HTTPProcessor处理
                         HttpPorcessor.process(accept);
                     }
@@ -92,7 +92,7 @@ public class HttpConnector implements Runnable{
                     if (selectionKey.isAcceptable()) {
                         // 有新连接就绪
                         SocketChannel accept = ssc.accept();
-                        System.out.println("新连接到来：" + accept.getLocalAddress());
+                        System.out.println("新连接到来：" + accept.getRemoteAddress());
                         // 将新连接交付为HTTPProcessor处理
                     } /*else if (selectionKey.isReadable()) {
                         // 可读事件就绪,通过线程池解析请求

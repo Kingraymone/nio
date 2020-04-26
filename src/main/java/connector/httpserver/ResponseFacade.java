@@ -14,6 +14,6 @@ public class ResponseFacade {
     }
 
     public void responseResult() {
-        response.responseResult();
+        response.responseStatic();
     }
 }
