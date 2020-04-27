@@ -4,21 +4,21 @@ import connector.httpserver.Request;
 import connector.httpserver.Response;
 import core.process.StaticProcess;
 
-import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 
-public class ResponseProcess implements Runnable{
+public class ResponseProcess implements Runnable {
     private SelectionKey sk;
-    public ResponseProcess(SelectionKey sk){
-        this.sk=sk;
+
+    public ResponseProcess(SelectionKey sk) {
+        this.sk = sk;
     }
 
     @Override
     public void run() {
-        Request request = (Request)sk.attachment();
+        Request request = (Request) sk.attachment();
         try {
-            if(request!=null) {
+            if (request != null) {
                 Response response = new Response((SocketChannel) sk.channel(), request);
                 if (request.getUri().startsWith("/servlet")) {
                     System.out.println("处理动态请求！");

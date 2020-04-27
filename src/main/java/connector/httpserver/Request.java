@@ -23,6 +23,7 @@ public class Request {
 
     public String praseRequest(){
         ByteBuffer bb = ByteBuffer.allocate(BUFFER_SIZE);
+        System.out.println("byteBuffer解析请求！");
         try {
             int num=input.read(bb);
             if(num>0){

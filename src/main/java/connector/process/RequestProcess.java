@@ -4,8 +4,6 @@ import connector.httpserver.Request;
 import connector.httpserver.Response;
 import core.process.StaticProcess;
 
-import java.io.IOException;
-import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 
@@ -20,12 +18,16 @@ public class RequestProcess implements Runnable {
     public void run() {
         Request request;
         try {
-            request = new Request((SocketChannel)sk.channel());
+            System.out.println("数据读取交互开始！");
+            request = new Request((SocketChannel) sk.channel());
             String param = request.praseRequest();
+            System.out.println("数据读取交互结束！");
             if (param != null) {
                 request.parseHead(param);
-            }else{
+            } else {
+                System.out.println("连接内容读取出错！！！");
                 sk.cancel();
+                sk.channel().close();
                 return;
             }
             Response response = new Response((SocketChannel) sk.channel(), request);
@@ -37,9 +39,8 @@ public class RequestProcess implements Runnable {
                 StaticProcess staticProcess = new StaticProcess();
                 staticProcess.process(request, response);
             }
-            sk.cancel();
-            //响应结束修改为可读事件
-            //sk.interestOps(SelectionKey.OP_READ);
+            System.out.println("请求处理完毕，等待下次连接...........");
+            //sk.cancel();
         } catch (Exception e) {
             e.printStackTrace();
         }

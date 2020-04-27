@@ -6,9 +6,14 @@ import connector.utils.StatusCode;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,16 +43,15 @@ public class Response {
         return head.get(key);
     }
 
-
+    @SuppressWarnings("null")
     public void responseStatic() {
-        String relative = Constant.WEB_ROOT + Constant.FILESEPARATOR + "src" + Constant.FILESEPARATOR + "main" + Constant.FILESEPARATOR + "resources";
-        String resource = relative + Constant.FILESEPARATOR + request.getUri().substring(1) + ".html";
-        System.out.println("请求文件为：" + resource);
-        File file = new File(resource);
+        System.out.println("请求头部uri为："+request.getUri());
+        File file = new File("resources/"+request.getUri());
         //响应头部生成
         createResponseBody();
         try {
             if (file.exists()) {
+                System.out.println("请求路径为："+file.getAbsolutePath());
                 FileChannel fc = FileChannel.open(file.toPath(), StandardOpenOption.READ);
                 sb.append("Content-length:").append(fc.size());
                 sb.append(Constant.LINESEPARATOR).append(Constant.LINESEPARATOR);
@@ -57,7 +61,9 @@ public class Response {
                 bb.flip();
                 output.write(bb);
             } else {
-                FileChannel fc = FileChannel.open(new File(relative + Constant.FILESEPARATOR + "404.html").toPath(), StandardOpenOption.READ);
+                file = new File("resources/404.html");
+                System.out.println("请求路径为："+file.getAbsolutePath());
+                FileChannel fc = FileChannel.open(file.toPath(), StandardOpenOption.READ);
                 sb.append("Content-length:").append(fc.size());
                 sb.append(Constant.LINESEPARATOR).append(Constant.LINESEPARATOR);
                 ByteBuffer bb = ByteBuffer.allocate((int) (sb.length() + fc.size() + 64));
