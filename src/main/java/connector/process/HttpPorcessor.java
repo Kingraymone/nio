@@ -27,7 +27,7 @@ public class HttpPorcessor {
     static {
         try {
             selector = Selector.open();
-            tpe = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()*2, 20, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(10), new ThreadPoolExecutor.AbortPolicy());
+            tpe = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()*4, 40, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(10), new ThreadPoolExecutor.AbortPolicy());
             System.out.println("初始线程池或选择器！");
         } catch (IOException e) {
             e.printStackTrace();
@@ -39,15 +39,22 @@ public class HttpPorcessor {
         try {
             //非阻塞模式
             sc.configureBlocking(false);
+            //selector.wakeup();
             sc.register(selector, SelectionKey.OP_READ);
+            System.out.println("读事件注册完成！");
             if (!run) {
                 System.out.println("开启线程等待读事件!");
                 run = true;
                 tpe.execute(() -> {
                     while (true) {
                         try {
-                            int select = selector.select();
+                            int select = selector.selectNow();
                             if (select < 1) {
+                                try {
+                                    Thread.sleep(20);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                                 continue;
                             }
                             Set<SelectionKey> selectionKeys = selector.selectedKeys();

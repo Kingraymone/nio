@@ -50,7 +50,7 @@ public class Response {
         //响应头部生成
         createResponseBody();
         try {
-            if (file.exists()) {
+            if (!"/".equals(request.getUri())&&file.exists()) {
                 System.out.println("请求路径为："+file.getAbsolutePath());
                 FileChannel fc = FileChannel.open(file.toPath(), StandardOpenOption.READ);
                 sb.append("Content-length:").append(fc.size());

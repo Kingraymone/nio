@@ -23,10 +23,10 @@ public class Request {
 
     public String praseRequest(){
         ByteBuffer bb = ByteBuffer.allocate(BUFFER_SIZE);
-        System.out.println("byteBuffer解析请求！");
         try {
             int num=input.read(bb);
             if(num>0){
+                System.out.println("请求数据获得成功!");
                 return new String(bb.array(),0,bb.limit());
             }
             return null;

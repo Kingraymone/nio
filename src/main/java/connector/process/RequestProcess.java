@@ -25,9 +25,8 @@ public class RequestProcess implements Runnable {
             if (param != null) {
                 request.parseHead(param);
             } else {
-                System.out.println("连接内容读取出错！！！");
-                sk.cancel();
                 sk.channel().close();
+                System.out.println("请求数据异常！关闭连接！");
                 return;
             }
             Response response = new Response((SocketChannel) sk.channel(), request);
@@ -40,7 +39,7 @@ public class RequestProcess implements Runnable {
                 staticProcess.process(request, response);
             }
             System.out.println("请求处理完毕，等待下次连接...........");
-            //sk.cancel();
+            sk.interestOps(SelectionKey.OP_READ);
         } catch (Exception e) {
             e.printStackTrace();
         }
