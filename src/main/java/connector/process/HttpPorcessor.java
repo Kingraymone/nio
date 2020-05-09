@@ -1,5 +1,8 @@
 package connector.process;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -23,12 +26,12 @@ public class HttpPorcessor {
     private static volatile boolean run = false;
     //线程池处理请求
     private static ThreadPoolExecutor tpe;
-
+    private static Logger logger = LoggerFactory.getLogger(HttpPorcessor.class);
     static {
         try {
             selector = Selector.open();
             tpe = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()*4, 40, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(10), new ThreadPoolExecutor.AbortPolicy());
-            System.out.println("初始线程池或选择器！");
+            logger.info("初始线程池和选择器！");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -41,20 +44,13 @@ public class HttpPorcessor {
             sc.configureBlocking(false);
             //selector.wakeup();
             sc.register(selector, SelectionKey.OP_READ);
-            System.out.println("读事件注册完成！");
             if (!run) {
-                System.out.println("开启线程等待读事件!");
                 run = true;
                 tpe.execute(() -> {
                     while (true) {
                         try {
-                            int select = selector.selectNow();
+                            int select = selector.select(10);
                             if (select < 1) {
-                                try {
-                                    Thread.sleep(20);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
                                 continue;
                             }
                             Set<SelectionKey> selectionKeys = selector.selectedKeys();
@@ -66,7 +62,6 @@ public class HttpPorcessor {
                                 //可读
                                 if (key.isValid() && key.isReadable()) {
                                     RequestProcess requestProcess = new RequestProcess(key);
-                                    System.out.println("开始处理请求！" + (((SocketChannel) key.channel()).getRemoteAddress()));
                                     //切换为写事件
                                     key.interestOps(SelectionKey.OP_WRITE);
                                     tpe.execute(requestProcess);

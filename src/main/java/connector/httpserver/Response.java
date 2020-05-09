@@ -3,6 +3,8 @@ package connector.httpserver;
 
 import connector.utils.Constant;
 import connector.utils.StatusCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +28,7 @@ public class Response {
     private String status = "OK";
     private StringBuffer sb = new StringBuffer();
     private HashMap<String, String> head = new HashMap<>(8);
-
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     public Response(SocketChannel sc, Request request) {
         this.output = sc;
         this.request = request;
@@ -45,13 +47,13 @@ public class Response {
 
     @SuppressWarnings("null")
     public void responseStatic() {
-        System.out.println("请求头部uri为："+request.getUri());
+        logger.info("请求头部uri为：{}",request.getUri());
         File file = new File("resources/"+request.getUri());
         //响应头部生成
         createResponseBody();
         try {
             if (!"/".equals(request.getUri())&&file.exists()) {
-                System.out.println("请求路径为："+file.getAbsolutePath());
+                logger.info("请求路径为：{}",file.getAbsolutePath());
                 FileChannel fc = FileChannel.open(file.toPath(), StandardOpenOption.READ);
                 sb.append("Content-length:").append(fc.size());
                 sb.append(Constant.LINESEPARATOR).append(Constant.LINESEPARATOR);
@@ -62,7 +64,7 @@ public class Response {
                 output.write(bb);
             } else {
                 file = new File("resources/404.html");
-                System.out.println("请求路径为："+file.getAbsolutePath());
+                logger.info("请求路径为：{}",file.getAbsolutePath());
                 FileChannel fc = FileChannel.open(file.toPath(), StandardOpenOption.READ);
                 sb.append("Content-length:").append(fc.size());
                 sb.append(Constant.LINESEPARATOR).append(Constant.LINESEPARATOR);

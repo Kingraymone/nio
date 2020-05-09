@@ -2,6 +2,8 @@ package connector.httpserver;
 
 import connector.process.HttpPorcessor;
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -24,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 @Data
 public class HttpConnector implements Runnable{
     private boolean shutdown = false;
-
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Override
     public void run() {
         try {
@@ -52,14 +54,14 @@ public class HttpConnector implements Runnable{
                     if (selectionKey.isAcceptable()) {
                         // 有新连接就绪
                         SocketChannel accept = ssc.accept();
-                        System.out.println("新连接到来：" + accept.getRemoteAddress());
+                        logger.info("新连接到来：{}",accept.getRemoteAddress());
                         // 将新连接交付为HTTPProcessor处理
                         HttpPorcessor.process(accept);
                     }
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("监听出错！关闭连接！",e);
         }
     }
     public void start(){

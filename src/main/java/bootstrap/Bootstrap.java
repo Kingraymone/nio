@@ -1,6 +1,10 @@
 package bootstrap;
 
 import connector.httpserver.HttpConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 
 
 /**
@@ -10,7 +14,9 @@ import connector.httpserver.HttpConnector;
  */
 public class Bootstrap {
     public static void main(String[] args) {
+        Logger logger = LoggerFactory.getLogger(Bootstrap.class);
         HttpConnector connector = new HttpConnector();
+        logger.info("启动连接！");
         connector.start();
     }
 }

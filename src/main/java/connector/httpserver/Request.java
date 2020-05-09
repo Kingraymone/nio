@@ -1,6 +1,8 @@
 package connector.httpserver;
 
 import connector.utils.Constant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.io.ByteArrayOutputStream;
@@ -17,6 +19,7 @@ public class Request {
     private String method;
     private HashMap<String,String> head = new HashMap<>(8);
     private static final int BUFFER_SIZE = 8196;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     public Request(SocketChannel sc) {
         this.input = sc;
     }
@@ -26,7 +29,7 @@ public class Request {
         try {
             int num=input.read(bb);
             if(num>0){
-                System.out.println("请求数据获得成功!");
+                logger.debug("读取请求内容成功！");
                 return new String(bb.array(),0,bb.limit());
             }
             return null;
@@ -40,7 +43,8 @@ public class Request {
         String line = param.substring(0,param.indexOf(separator));
         String[] heads = line.split(" ");
         if(heads.length!=3){
-            throw new Exception("解析头部失败！");
+            logger.error("解析头部失败！");
+            throw new Exception("");
         }else{
             this.method=heads[0];
             this.uri=heads[1];
