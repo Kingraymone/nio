@@ -59,8 +59,7 @@ public class Request {
         try {
             ByteBuffer bb = ByteBuffer.allocate(2048);
             bis = new ByteArrayOutputStream(2048);
-            int len;
-            while ((len = input.read(bb)) > 0) {
+            while (input.read(bb) > 0) {
                 bb.flip();//读写模式转换
                 bis.write(bb.array(), 0, bb.limit());
             }
