@@ -5,6 +5,7 @@ import base.face.connector.Request;
 import base.face.connector.Response;
 import base.face.container.Container;
 import base.face.container.Pipeline;
+import base.face.container.Valve;
 
 public class BaseContainer extends BaseLifecycle implements Container {
     // 管道流
@@ -23,7 +24,17 @@ public class BaseContainer extends BaseLifecycle implements Container {
      * @param response
      */
     public void invoke(Request request, Response response) {
-
+        // start
+        start();
+        Valve[] valves = pipeline.getValves();
+        // 调用容器本身valve
+        for(Valve valve:valves){
+            valve.invoke(request,response);
+        }
+        // 调用子容器invoke方法
+        for(Container container:children){
+            ((BaseContainer)container).invoke(request,response);
+        }
     }
 
     @Override
@@ -64,5 +75,20 @@ public class BaseContainer extends BaseLifecycle implements Container {
     @Override
     public void removeChild() {
 
+    }
+
+    @Override
+    public void init() {
+        logger.debug("init()执行--Container");
+    }
+
+    @Override
+    public void start() {
+        logger.debug("start()执行--Container！");
+    }
+
+    @Override
+    public void stop() {
+        logger.debug("stop()执行--Container！");
     }
 }

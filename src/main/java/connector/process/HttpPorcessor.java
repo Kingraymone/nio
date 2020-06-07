@@ -1,5 +1,6 @@
 package connector.process;
 
+import base.face.connector.Connector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +31,7 @@ public class HttpPorcessor {
     static {
         try {
             selector = Selector.open();
-            tpe = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()*4, 40, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(10), new ThreadPoolExecutor.AbortPolicy());
+            tpe = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()*4, 40, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100), new ThreadPoolExecutor.AbortPolicy());
             logger.info("初始线程池和选择器！");
         } catch (IOException e) {
             e.printStackTrace();
@@ -38,7 +39,7 @@ public class HttpPorcessor {
     }
 
 
-    public static void process(SocketChannel sc) {
+    public static void process(SocketChannel sc, Connector connector) {
         try {
             //非阻塞模式
             sc.configureBlocking(false);
@@ -61,7 +62,7 @@ public class HttpPorcessor {
                                 iterator.remove();
                                 //可读
                                 if (key.isValid() && key.isReadable()) {
-                                    RequestProcess requestProcess = new RequestProcess(key);
+                                    RequestProcess requestProcess = new RequestProcess(key,connector);
                                     //切换为写事件
                                     key.interestOps(SelectionKey.OP_WRITE);
                                     tpe.execute(requestProcess);

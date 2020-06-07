@@ -7,13 +7,13 @@ package connector.httpserver;
  * @date 2020-04-14
  */
 public class ResponseFacade {
-    private Response response;
+    private HttpResponse httpResponse;
 
-    public ResponseFacade(Response response) {
-        this.response = response;
+    public ResponseFacade(HttpResponse httpResponse) {
+        this.httpResponse = httpResponse;
     }
 
     public void responseResult() {
-        response.responseStatic();
+        httpResponse.responseStatic();
     }
 }

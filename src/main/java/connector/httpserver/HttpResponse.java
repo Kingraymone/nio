@@ -1,6 +1,7 @@
 package connector.httpserver;
 
 
+import base.face.connector.Response;
 import connector.utils.Constant;
 import connector.utils.StatusCode;
 import org.slf4j.Logger;
@@ -8,30 +9,25 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SocketChannel;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class Response {
+public class HttpResponse implements Response {
     private String protocol;
-    private Request request;
+    private HttpRequest httpRequest;
     private SocketChannel output;
     private String status = "OK";
     private StringBuffer sb = new StringBuffer();
     private HashMap<String, String> head = new HashMap<>(8);
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    public Response(SocketChannel sc, Request request) {
+    public HttpResponse(SocketChannel sc, HttpRequest httpRequest) {
         this.output = sc;
-        this.request = request;
+        this.httpRequest = httpRequest;
         head.put("Server", "nio http");
         head.put("Content-type", "text/html;charset=UTF-8");
         this.protocol = "HTTP/1.1";
@@ -47,12 +43,12 @@ public class Response {
 
     @SuppressWarnings("null")
     public void responseStatic() {
-        logger.info("请求头部uri为：{}",request.getUri());
-        File file = new File("resources/"+request.getUri());
+        logger.info("请求头部uri为：{}", httpRequest.getUri());
+        File file = new File("resources/"+ httpRequest.getUri());
         //响应头部生成
         createResponseBody();
         try {
-            if (!"/".equals(request.getUri())&&file.exists()) {
+            if (!"/".equals(httpRequest.getUri())&&file.exists()) {
                 logger.info("请求路径为：{}",file.getAbsolutePath());
                 FileChannel fc = FileChannel.open(file.toPath(), StandardOpenOption.READ);
                 sb.append("Content-length:").append(fc.size());
@@ -101,8 +97,8 @@ public class Response {
         return protocol;
     }
 
-    public Request getRequest() {
-        return request;
+    public HttpRequest getHttpRequest() {
+        return httpRequest;
     }
 
     public SocketChannel getOutput() {

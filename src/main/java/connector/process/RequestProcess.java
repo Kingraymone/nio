@@ -1,7 +1,9 @@
 package connector.process;
 
-import connector.httpserver.Request;
-import connector.httpserver.Response;
+import base.baseface.container.BaseContainer;
+import base.face.connector.Connector;
+import connector.httpserver.HttpRequest;
+import connector.httpserver.HttpResponse;
 import core.process.StaticProcess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +14,10 @@ import java.nio.channels.SocketChannel;
 
 public class RequestProcess implements Runnable {
     private SelectionKey sk;
+    private Connector connector;
 
-    public RequestProcess(SelectionKey sk) {
+    public RequestProcess(SelectionKey sk,Connector connector) {
+        this.connector=connector;
         this.sk = sk;
     }
 
@@ -21,27 +25,28 @@ public class RequestProcess implements Runnable {
 
     @Override
     public void run() {
-        Request request;
+        HttpRequest httpRequest;
         logger.info("=========================================");
         try {
             logger.info("开始处理请求：{}", (((SocketChannel) sk.channel()).getRemoteAddress()));
-            request = new Request((SocketChannel) sk.channel());
-            String param = request.praseRequest();
+            httpRequest = new HttpRequest((SocketChannel) sk.channel());
+            String param = httpRequest.praseRequest();
             if (param != null) {
-                request.parseHead(param);
+                httpRequest.parseHead(param);
             } else {
                 sk.channel().close();
                 logger.error("请求数据异常！关闭连接！");
                 return;
             }
-            Response response = new Response((SocketChannel) sk.channel(), request);
-            if (request.getUri().startsWith("/servlet")) {
+            HttpResponse httpResponse = new HttpResponse((SocketChannel) sk.channel(), httpRequest);
+            ((BaseContainer)this.connector.getContainer()).invoke(httpRequest,httpResponse);
+            /*if (httpRequest.getUri().startsWith("/servlet")) {
                 logger.debug("开始处理动态请求！");
             } else {
                 logger.debug("开始处理静态请求！");
                 StaticProcess staticProcess = new StaticProcess();
-                staticProcess.process(request, response);
-            }
+                staticProcess.process(httpRequest, httpResponse);
+            }*/
             logger.info("请求处理完毕，等待下次连接...........");
             sk.interestOps(SelectionKey.OP_READ);
         } catch (Exception e) {

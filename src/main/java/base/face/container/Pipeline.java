@@ -6,7 +6,7 @@ package base.face.container;
 public interface Pipeline {
     Valve getBasic();
     void setBasic(Valve valve);
-    void addValve();
+    void addValve(Valve valve);
     Valve[] getValves();
     void removeValve();
     Valve getFirst();

@@ -1,7 +1,7 @@
 package core.process;
 
-import connector.httpserver.Request;
-import connector.httpserver.Response;
+import connector.httpserver.HttpRequest;
+import connector.httpserver.HttpResponse;
 
 
 /**
@@ -10,7 +10,7 @@ import connector.httpserver.Response;
  * @date 2020-04-14
  */
 public class ServletProcess {
-    public void process(Request request, Response response){
+    public void process(HttpRequest httpRequest, HttpResponse httpResponse){
 
     }
 }

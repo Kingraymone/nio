@@ -1,5 +1,6 @@
 package connector.httpserver;
 
+import base.face.connector.Request;
 import connector.utils.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,7 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 
 
-public class Request {
+public class HttpRequest implements Request {
     private SocketChannel input;
     private String uri;
     private String protocol;
@@ -20,7 +21,7 @@ public class Request {
     private HashMap<String,String> head = new HashMap<>(8);
     private static final int BUFFER_SIZE = 8196;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    public Request(SocketChannel sc) {
+    public HttpRequest(SocketChannel sc) {
         this.input = sc;
     }
 

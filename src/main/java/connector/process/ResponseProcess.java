@@ -1,7 +1,7 @@
 package connector.process;
 
-import connector.httpserver.Request;
-import connector.httpserver.Response;
+import connector.httpserver.HttpRequest;
+import connector.httpserver.HttpResponse;
 import core.process.StaticProcess;
 
 import java.nio.channels.SelectionKey;
@@ -16,17 +16,17 @@ public class ResponseProcess implements Runnable {
 
     @Override
     public void run() {
-        Request request = (Request) sk.attachment();
+        HttpRequest httpRequest = (HttpRequest) sk.attachment();
         try {
-            if (request != null) {
-                Response response = new Response((SocketChannel) sk.channel(), request);
-                if (request.getUri().startsWith("/servlet")) {
+            if (httpRequest != null) {
+                HttpResponse httpResponse = new HttpResponse((SocketChannel) sk.channel(), httpRequest);
+                if (httpRequest.getUri().startsWith("/servlet")) {
                     System.out.println("处理动态请求！");
 
                 } else {
                     System.out.println("处理静态请求！");
                     StaticProcess staticProcess = new StaticProcess();
-                    staticProcess.process(request, response);
+                    staticProcess.process(httpRequest, httpResponse);
                 }
                 sk.channel();
                 //响应结束修改为可读事件

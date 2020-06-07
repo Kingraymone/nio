@@ -7,17 +7,17 @@ package connector.httpserver;
  * @date 2020-04-14
  */
 public class RequestFacade {
-    private Request request;
+    private HttpRequest httpRequest;
 
-    public RequestFacade(Request request) {
-        this.request = request;
+    public RequestFacade(HttpRequest httpRequest) {
+        this.httpRequest = httpRequest;
     }
 
     public void parse() {
-        request.parse();
+        httpRequest.parse();
     }
 
     public String getUri() {
-        return request.getUri();
+        return httpRequest.getUri();
     }
 }

@@ -1,5 +1,6 @@
 package connector.httpserver;
 
+import base.baseface.connector.BaseConnector;
 import connector.process.HttpPorcessor;
 import lombok.Data;
 import org.slf4j.Logger;
@@ -13,9 +14,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 
 /**
@@ -24,9 +23,10 @@ import java.util.concurrent.TimeUnit;
  * @date 2020-04-14
  */
 @Data
-public class HttpConnector implements Runnable{
+public class HttpConnector extends BaseConnector implements Runnable {
     private boolean shutdown = false;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Override
     public void run() {
         try {
@@ -54,20 +54,28 @@ public class HttpConnector implements Runnable{
                     if (selectionKey.isAcceptable()) {
                         // 有新连接就绪
                         SocketChannel accept = ssc.accept();
-                        logger.info("新连接到来：{}",accept.getRemoteAddress());
+                        logger.info("新连接到来：{}", accept.getRemoteAddress());
                         // 将新连接交付为HTTPProcessor处理
-                        HttpPorcessor.process(accept);
+                        HttpPorcessor.process(accept,this);
                     }
                 }
             }
         } catch (IOException e) {
-            logger.error("监听出错！关闭连接！",e);
+            logger.error("监听出错！关闭连接！", e);
         }
     }
-    public void start(){
-        ThreadPoolExecutor tpe = new ThreadPoolExecutor(1,1,60, TimeUnit.SECONDS,new LinkedBlockingQueue<>(),new ThreadPoolExecutor.AbortPolicy());
+
+    public void start() {
+        logger.debug("start()执行--Connector！");
+        ExecutorService tpe = Executors.newFixedThreadPool(1);
         tpe.execute(this);
     }
+
+    @Override
+    public void stop() {
+        logger.debug("stop()执行--Connector！");
+    }
+
     public void start1() {
         try {
             //根据操作系统获得对应选择器

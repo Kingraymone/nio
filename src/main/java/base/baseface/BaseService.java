@@ -26,7 +26,9 @@ public class BaseService extends BaseLifecycle implements Service {
     @Override
     public void setContainer(Container container) {
         this.container = container;
-
+        for(Connector connector:connectors){
+            connector.setContainer(container);
+        }
     }
 
     @Override
@@ -36,6 +38,7 @@ public class BaseService extends BaseLifecycle implements Service {
             System.arraycopy(connectors, 0, result, 0, connectors.length);
             result[connectors.length] = connector;
             connectors = result;
+            connector.setContainer(container);
         }
     }
 
