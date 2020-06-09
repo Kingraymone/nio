@@ -10,7 +10,7 @@ public interface Wrapper {
 
     void unload();
 
-    void allocate();
+    Servlet allocate();
 
     Servlet getServlet();
 

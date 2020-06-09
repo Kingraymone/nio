@@ -1,5 +1,7 @@
 package base.baseface.container;
 
+import base.face.connector.Request;
+import base.face.connector.Response;
 import base.face.container.Wrapper;
 import core.servlet.Servlet;
 
@@ -9,6 +11,9 @@ public class BaseWrapper extends BaseContainer implements Wrapper {
     // servlet类名称
     String servletClass = null;
 
+    public void invoke(Request request, Response response){
+
+    }
     @Override
     public void load() {
 
@@ -20,8 +25,8 @@ public class BaseWrapper extends BaseContainer implements Wrapper {
     }
 
     @Override
-    public void allocate() {
-
+    public Servlet allocate() {
+        return null;
     }
 
     @Override

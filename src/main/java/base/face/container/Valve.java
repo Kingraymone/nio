@@ -4,6 +4,9 @@ import base.face.connector.Request;
 import base.face.connector.Response;
 
 public interface Valve {
+    void setContainer(Container container);
+    Container getContainer();
+
     Valve getNext();
     void setNext(Valve valve);
     // 责任链调用

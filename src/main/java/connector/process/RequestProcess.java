@@ -39,14 +39,14 @@ public class RequestProcess implements Runnable {
                 return;
             }
             HttpResponse httpResponse = new HttpResponse((SocketChannel) sk.channel(), httpRequest);
-            ((BaseContainer)this.connector.getContainer()).invoke(httpRequest,httpResponse);
-            /*if (httpRequest.getUri().startsWith("/servlet")) {
+            if (httpRequest.getUri().startsWith("/servlet")) {
                 logger.debug("开始处理动态请求！");
+                ((BaseContainer)this.connector.getContainer()).invoke(httpRequest,httpResponse);
             } else {
                 logger.debug("开始处理静态请求！");
                 StaticProcess staticProcess = new StaticProcess();
                 staticProcess.process(httpRequest, httpResponse);
-            }*/
+            }
             logger.info("请求处理完毕，等待下次连接...........");
             sk.interestOps(SelectionKey.OP_READ);
         } catch (Exception e) {
