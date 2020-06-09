@@ -2,11 +2,16 @@ package base.baseface.container;
 
 import base.face.connector.Request;
 import base.face.connector.Response;
-import core.process.StaticProcess;
+import core.servlet.Servlet;
 
+/**
+ * 基础Wrapper，调用servlet的service方法
+ */
 public class WrapperValve extends BaseValve {
     @Override
     public void invoke(Request request, Response response) {
-        super.invoke(request, response);
+        BaseWrapper wrapper = (BaseWrapper) this.getContainer();
+        Servlet servlet = wrapper.allocate();
+        servlet.service(request, response);
     }
 }

@@ -20,8 +20,8 @@ public class BaseWrapper extends BaseContainer implements Wrapper {
     }
 
     @Override
-    public void allocate() {
-
+    public Servlet allocate() {
+        return null;
     }
 
     @Override
