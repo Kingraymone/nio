@@ -26,14 +26,15 @@ public class BaseContainer extends BaseLifecycle implements Container {
     public void invoke(Request request, Response response) {
         // start
         start();
-        Valve[] valves = pipeline.getValves();
         // 调用容器本身valve
-        for(Valve valve:valves){
-            valve.invoke(request,response);
+        if (pipeline.getFirst() == null) {
+            pipeline.getBasic().invoke(request, response);
+        } else {
+            pipeline.getFirst().invoke(request, response);
         }
         // 调用子容器invoke方法
-        for(Container container:children){
-            ((BaseContainer)container).invoke(request,response);
+        for (Container container : children) {
+            ((BaseContainer) container).invoke(request, response);
         }
     }
 

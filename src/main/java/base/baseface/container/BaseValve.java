@@ -9,6 +9,7 @@ import base.face.container.Valve;
 public class BaseValve extends BaseLifecycle implements Valve {
     private Valve next;
     Container container;
+
     @Override
     public Valve getNext() {
         return next;
@@ -16,12 +17,15 @@ public class BaseValve extends BaseLifecycle implements Valve {
 
     @Override
     public void setNext(Valve valve) {
-        this.next=valve;
+        this.next = valve;
     }
 
     @Override
     public void invoke(Request request, Response response) {
         System.out.println("钩子处理！");
+        if (next != null) {
+            next.invoke(request, response);
+        }
     }
 
     @Override
@@ -30,12 +34,12 @@ public class BaseValve extends BaseLifecycle implements Valve {
     }
 
     @Override
-    public void setContainer(Container container) {
-        this.container=container;
+    public Container getContainer() {
+        return container;
     }
 
     @Override
-    public Container getContainer() {
-        return container;
+    public void setContainer(Container container) {
+        this.container=container;
     }
 }
