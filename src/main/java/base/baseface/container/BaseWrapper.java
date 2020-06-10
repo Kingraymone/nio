@@ -19,13 +19,7 @@ public class BaseWrapper extends BaseContainer implements Wrapper {
     }
     @Override
     public void load() {
-        ClassLoader classLoader = this.getClass().getClassLoader();
-        try {
-            Class<?> aClass = classLoader.loadClass(servletClass);
-            instance = (Servlet)aClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Override
