@@ -4,7 +4,6 @@ import base.face.connector.Request;
 import base.face.connector.Response;
 import base.face.container.Container;
 import base.face.container.Context;
-import core.servlet.Servlet;
 
 public class BaseContext extends BaseContainer implements Context {
     // 是否动态加载servlet
@@ -24,8 +23,7 @@ public class BaseContext extends BaseContainer implements Context {
             // 在子容器找到对应servlet
             Container children = findChildren(servletUri.substring(1));
             if (children != null) {
-                Servlet allocate = ((BaseWrapper) children).allocate();
-                allocate.service(request, response);
+                ((BaseWrapper) children).invoke(request, response);
             }
         }
     }

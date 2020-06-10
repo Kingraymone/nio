@@ -12,8 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-
-
 /**
  * @Description 启动类
  * @Package bootstrap
@@ -28,7 +26,9 @@ public class Bootstrap {
         BaseWrapper wrapper = new BaseWrapper();
         wrapper.setName("TestServlet");
         wrapper.setServletClass("core.servlet.TestServlet");
-        wrapper.getPipeline().setBasic(new WrapperValve());
+        WrapperValve wrapperValve = new WrapperValve();
+        wrapperValve.setContainer(wrapper);
+        wrapper.getPipeline().setBasic(wrapperValve);
         wrapper.getPipeline().addValve(new TestValve());
         // context容器设置
         BaseContext baseContext = new BaseContext();

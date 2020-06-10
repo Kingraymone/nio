@@ -1,8 +1,10 @@
+import base.face.Service;
 import connector.utils.Constant;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Test {
@@ -165,9 +167,8 @@ public class Test {
 
         }
     }
-    public static void main(String[] args) throws IllegalAccessException, InstantiationException {
-        Properties properties = System.getProperties();
-        properties.list(System.out);
-
+    public static void main(String[] args) throws Exception, InstantiationException {
+        String ROOT = Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("")).getFile();
+        System.out.println(ROOT);
     }
 }

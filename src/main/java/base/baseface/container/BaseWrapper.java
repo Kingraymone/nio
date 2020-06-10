@@ -2,6 +2,7 @@ package base.baseface.container;
 
 import base.face.connector.Request;
 import base.face.connector.Response;
+import base.face.container.Pipeline;
 import base.face.container.Wrapper;
 import core.servlet.Servlet;
 import core.utils.MyLoader;
@@ -13,7 +14,12 @@ public class BaseWrapper extends BaseContainer implements Wrapper {
     String servletClass = null;
 
     public void invoke(Request request, Response response) {
-
+        Pipeline pipeline = this.getPipeline();
+        if (pipeline.getFirst() != null) {
+            pipeline.getFirst().invoke(request, response);
+        } else {
+            pipeline.getBasic().invoke(request, response);
+        }
     }
 
     @Override
