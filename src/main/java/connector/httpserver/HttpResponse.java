@@ -75,8 +75,19 @@ public class HttpResponse implements Response {
         }
     }
 
-    public void responseServlet() {
-
+    public void write(String str) {
+        try {
+            createResponseBody();
+            sb.append("Content-length:").append(str.getBytes().length);
+            sb.append(Constant.LINESEPARATOR).append(Constant.LINESEPARATOR);
+            ByteBuffer bb = ByteBuffer.allocate((int) (sb.length() + str.getBytes().length + 64));
+            bb.put(sb.toString().getBytes());
+            bb.put(str.getBytes());
+            bb.flip();
+            output.write(bb);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void createResponseBody() {

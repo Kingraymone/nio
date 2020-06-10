@@ -13,7 +13,7 @@ public class TestServlet implements Servlet {
 
     @Override
     public void service(Request request, Response response) {
-
+        response.write("响应！abc");
     }
 
     @Override

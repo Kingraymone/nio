@@ -4,9 +4,7 @@ import base.face.connector.Request;
 import base.face.connector.Response;
 import base.face.container.Wrapper;
 import core.servlet.Servlet;
-
-import java.net.MalformedURLException;
-import java.net.URL;
+import core.utils.MyLoader;
 
 public class BaseWrapper extends BaseContainer implements Wrapper {
     // servlet实例
@@ -14,12 +12,21 @@ public class BaseWrapper extends BaseContainer implements Wrapper {
     // servlet类名称
     String servletClass = null;
 
-    public void invoke(Request request, Response response){
+    public void invoke(Request request, Response response) {
 
     }
+
     @Override
     public void load() {
-
+        if (instance == null || ((BaseContext) this.getParent()).reload) {
+            MyLoader loader = new MyLoader();
+            try {
+                Class<?> aClass = loader.loadClass(servletClass);
+                instance = (Servlet) aClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -29,9 +36,9 @@ public class BaseWrapper extends BaseContainer implements Wrapper {
 
     @Override
     public Servlet allocate() {
-        if(instance!=null){
+        if (instance != null) {
             return instance;
-        }else{
+        } else {
             load();
             return instance;
         }

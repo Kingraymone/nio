@@ -19,15 +19,15 @@ import java.util.Objects;
 public class MyLoader extends ClassLoader {
     Logger logger = LoggerFactory.getLogger(MyLoader.class);
     // 加载servlet的路径
-    private final static String ROOT = Objects.requireNonNull(getSystemClassLoader().getResource("")).getPath();
+    private final static String ROOT = Objects.requireNonNull(getSystemClassLoader().getResource("")).getPath().substring(1);
 
-    protected MyLoader() {
-        super(ClassLoader.getSystemClassLoader().getParent());
+    public MyLoader() {
+        //super(ClassLoader.getSystemClassLoader().getParent());
     }
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        String className = name.replaceAll("\\.", System.getProperty("file.separator")) + ".class";
+        String className = name.replace(".", System.getProperty("file.separator")) + ".class";
         Path path = Paths.get(ROOT, className);
         File file = path.toFile();
         if (!file.exists()) {

@@ -1,4 +1,4 @@
-package base.baseface.container;
+package base.baseface.container.valve;
 
 import base.baseface.BaseLifecycle;
 import base.face.connector.Request;
@@ -22,7 +22,6 @@ public class BaseValve extends BaseLifecycle implements Valve {
 
     @Override
     public void invoke(Request request, Response response) {
-        System.out.println("钩子处理！");
         if (next != null) {
             next.invoke(request, response);
         }
@@ -40,6 +39,6 @@ public class BaseValve extends BaseLifecycle implements Valve {
 
     @Override
     public void setContainer(Container container) {
-        this.container=container;
+        this.container = container;
     }
 }

@@ -1,11 +1,14 @@
 package base.baseface.container;
 
 import base.baseface.BaseLifecycle;
+import base.baseface.container.valve.BasePipeline;
 import base.face.connector.Request;
 import base.face.connector.Response;
 import base.face.container.Container;
 import base.face.container.Pipeline;
-import base.face.container.Valve;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BaseContainer extends BaseLifecycle implements Container {
     // 管道流
@@ -13,9 +16,11 @@ public class BaseContainer extends BaseLifecycle implements Container {
     // 父容器
     private Container parent = null;
     // 子容器
-    private Container[] children = new Container[0];
+    private Map<String, Container> children = new HashMap<>(8);
     // 子容器锁
     private final Object lock = new Object();
+    // 容器名称
+    private String name;
 
     /**
      * 连接器处理完毕有调用的方法
@@ -31,10 +36,6 @@ public class BaseContainer extends BaseLifecycle implements Container {
             pipeline.getBasic().invoke(request, response);
         } else {
             pipeline.getFirst().invoke(request, response);
-        }
-        // 调用子容器invoke方法
-        for (Container container : children) {
-            ((BaseContainer) container).invoke(request, response);
         }
     }
 
@@ -56,26 +57,38 @@ public class BaseContainer extends BaseLifecycle implements Container {
     @Override
     public void addChild(Container container) {
         synchronized (lock) {
-            Container[] result = new Container[children.length + 1];
-            System.arraycopy(children, 0, result, 0, children.length);
-            result[children.length] = container;
-            children = result;
+            children.put(container.getName(), container);
         }
     }
 
     @Override
-    public void findChild(Container container) {
-
+    public Container findChild(Container container) {
+        return children.get(container.getName());
     }
 
     @Override
-    public Container[] findChildren() {
+    public Container findChildren(String name) {
+        return children.get(name);
+    }
+
+    @Override
+    public Map getChildren() {
         return children;
     }
 
     @Override
     public void removeChild() {
 
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
