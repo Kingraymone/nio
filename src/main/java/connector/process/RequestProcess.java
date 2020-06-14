@@ -16,8 +16,8 @@ public class RequestProcess implements Runnable {
     private SelectionKey sk;
     private Connector connector;
 
-    public RequestProcess(SelectionKey sk,Connector connector) {
-        this.connector=connector;
+    public RequestProcess(SelectionKey sk, Connector connector) {
+        this.connector = connector;
         this.sk = sk;
     }
 
@@ -32,16 +32,16 @@ public class RequestProcess implements Runnable {
             httpRequest = new HttpRequest((SocketChannel) sk.channel());
             String param = httpRequest.praseRequest();
             if (param != null) {
-                httpRequest.parseHead(param);
+                httpRequest.parse(param);
             } else {
                 sk.channel().close();
                 logger.error("请求数据异常！关闭连接！");
                 return;
             }
             HttpResponse httpResponse = new HttpResponse((SocketChannel) sk.channel(), httpRequest);
-            if (httpRequest.getUri().startsWith("/servlet")) {
+            if (httpRequest.getUri().startsWith("/servlet") || httpRequest.getUri().startsWith("/home")) {
                 logger.debug("开始处理动态请求！");
-                ((BaseContainer)this.connector.getContainer()).invoke(httpRequest,httpResponse);
+                ((BaseContainer) this.connector.getContainer()).invoke(httpRequest, httpResponse);
             } else {
                 logger.debug("开始处理静态请求！");
                 StaticProcess staticProcess = new StaticProcess();

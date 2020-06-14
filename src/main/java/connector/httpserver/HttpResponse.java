@@ -25,6 +25,9 @@ public class HttpResponse implements Response {
     private StringBuffer sb = new StringBuffer();
     private HashMap<String, String> head = new HashMap<>(8);
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private String redirect = null;
+    private String forword = null;
+
     public HttpResponse(SocketChannel sc, HttpRequest httpRequest) {
         this.output = sc;
         this.httpRequest = httpRequest;
@@ -43,13 +46,15 @@ public class HttpResponse implements Response {
 
     @SuppressWarnings("null")
     public void responseStatic() {
-        logger.info("请求头部uri为：{}", httpRequest.getUri());
-        File file = new File("resources/"+ httpRequest.getUri());
+        String uri = forword == null ? httpRequest.getUri() : forword;
+        logger.info("请求头部uri为：{}", uri);
+        File file = new File("resources/" + uri);
         //响应头部生成
         createResponseBody();
         try {
-            if (!"/".equals(httpRequest.getUri())&&file.exists()) {
-                logger.info("请求路径为：{}",file.getAbsolutePath());
+            logger.info("测试路径：" + new File("").getCanonicalPath());
+            if (!"/".equals(httpRequest.getUri()) && file.exists()) {
+                logger.info("请求路径为：{}", file.getAbsolutePath());
                 FileChannel fc = FileChannel.open(file.toPath(), StandardOpenOption.READ);
                 sb.append("Content-length:").append(fc.size());
                 sb.append(Constant.LINESEPARATOR).append(Constant.LINESEPARATOR);
@@ -60,7 +65,7 @@ public class HttpResponse implements Response {
                 output.write(bb);
             } else {
                 file = new File("resources/404.html");
-                logger.info("请求路径为：{}",file.getAbsolutePath());
+                logger.info("请求路径为：{}", file.getAbsolutePath());
                 FileChannel fc = FileChannel.open(file.toPath(), StandardOpenOption.READ);
                 sb.append("Content-length:").append(fc.size());
                 sb.append(Constant.LINESEPARATOR).append(Constant.LINESEPARATOR);
@@ -126,5 +131,14 @@ public class HttpResponse implements Response {
 
     public HashMap<String, String> getHead() {
         return head;
+    }
+
+    public void setRedirect(String html){
+        this.redirect=html;
+    }
+
+    @Override
+    public void forword(String html) {
+        this.forword=html;
     }
 }

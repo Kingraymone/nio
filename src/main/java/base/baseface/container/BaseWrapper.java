@@ -1,5 +1,6 @@
 package base.baseface.container;
 
+import base.baseface.container.valve.WrapperValve;
 import base.face.connector.Request;
 import base.face.connector.Response;
 import base.face.container.Pipeline;
@@ -13,6 +14,9 @@ public class BaseWrapper extends BaseContainer implements Wrapper {
     // servlet类名称
     String servletClass = null;
 
+    public BaseWrapper(){
+        this.getPipeline().setBasic(new WrapperValve());
+    }
     public void invoke(Request request, Response response) {
         Pipeline pipeline = this.getPipeline();
         if (pipeline.getFirst() != null) {

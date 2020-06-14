@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class BaseContainer extends BaseLifecycle implements Container {
     // 管道流
-    private Pipeline pipeline = new BasePipeline();
+    private Pipeline pipeline = new BasePipeline(this);
     // 父容器
     private Container parent = null;
     // 子容器

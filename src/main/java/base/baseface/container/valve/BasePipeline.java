@@ -1,6 +1,7 @@
 package base.baseface.container.valve;
 
 import base.baseface.BaseLifecycle;
+import base.face.container.Container;
 import base.face.container.Pipeline;
 import base.face.container.Valve;
 
@@ -10,6 +11,20 @@ import java.util.List;
 public class BasePipeline extends BaseLifecycle implements Pipeline {
     private Valve basic = null;
     private Valve first = null;
+    private Container container;
+
+    public BasePipeline(Container container){
+        this.container=container;
+    }
+    @Override
+    public void setContainer(Container container) {
+        this.container=container;
+    }
+
+    @Override
+    public Container getContainer() {
+        return container;
+    }
 
     @Override
     public Valve getBasic() {
@@ -19,10 +34,12 @@ public class BasePipeline extends BaseLifecycle implements Pipeline {
     @Override
     public void setBasic(Valve valve) {
         this.basic = valve;
+        valve.setContainer(container);
     }
 
     @Override
     public void addValve(Valve valve) {
+        valve.setContainer(container);
         if (first == null) {
             first = valve;
             valve.setNext(basic);

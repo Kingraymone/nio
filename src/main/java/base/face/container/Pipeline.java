@@ -10,4 +10,8 @@ public interface Pipeline {
     Valve[] getValves();
     void removeValve();
     Valve getFirst();
+
+    // 容器绑定
+    void setContainer(Container container);
+    Container getContainer();
 }

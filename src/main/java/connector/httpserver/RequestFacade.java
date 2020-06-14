@@ -13,8 +13,12 @@ public class RequestFacade {
         this.httpRequest = httpRequest;
     }
 
-    public void parse() {
-        httpRequest.parse();
+    public void parse(String param) {
+        try {
+            httpRequest.parse(param);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getUri() {
