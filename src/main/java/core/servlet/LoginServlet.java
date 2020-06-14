@@ -28,13 +28,12 @@ public class LoginServlet implements Servlet {
         logger.info("请求用户名：" + username + "  密码：" + password);
         if (username.equals("king") && password.equals("123")) {
             // 如果session为空设置
-            String cookie = request.getHead().get("Cookie");
-            if (cookie == null) {
-                Session session = request.getSession();
-                logger.info("生成SessionId："+session.getId());
+            Session session = request.getSession();
+            if (session.getAttribute("name") == null) {
+                logger.info("生成SessionId：" + session.getId());
                 session.setAttribute("name", username);
                 session.setAttribute("pwd", password);
-                response.getHead().put("Set-Cookie", "kingSession="+session.getId()+";path=/");
+                response.getHead().put("Set-Cookie", "kingSession=" + session.getId() + ";path=/");
             }
             response.forword("index.html");
             response.responseStatic();
